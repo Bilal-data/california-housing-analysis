@@ -48,13 +48,13 @@ Location columns have weak linear correlation, but location is likely important 
 The correlation dropped, but this does not mean the true relationship is weaker. Removing the top end shrinks the range of the data, and the capped rows hide the real high prices. The honest summary is: roughly 0.65 to 0.69, depending on how the cap is handled.
 
 ## Limitations
-- Only exploratory analysis. No predictive model was built.
+- Exploratory analysis followed by baseline and predictive models (see Model Comparison below).
 - The cap means any model trained on this target will underestimate the highest prices.
 - Correlation is not causation, and it misses non-linear relationships.
 - One sample file of the dataset was used (the training split).
 
 ## Tools
-Python, pandas, matplotlib, Google Colab.
+Python, pandas, matplotlib, scikit-learn, Google Colab.
 
 ---
 
@@ -63,7 +63,7 @@ Python, pandas, matplotlib, Google Colab.
 - المتوسط أكبر من الوسيط بحوالي 27 ألف، لأن البيوت الغالية بتشد المتوسط.
 - اكتشفت **سقف مصطنع** عند 500,001 في 836 صف (4.9 في المئة).
 - الدخل هو أقوى عامل: ارتباطه حوالي 0.69، ونزل لحوالي 0.65 بعد شيل الصفوف المسقوفة.
-- التحليل استكشافي فقط، ومفيهوش نموذج تنبؤ.
+- بنينا نماذج تنبؤ: أفضلها `Random Forest` بمتوسط غلط حوالي 29,704 دولار (أحسن من النموذج الغبي بحوالي 61 بالمئة).    
 
 ## Model Comparison
 
