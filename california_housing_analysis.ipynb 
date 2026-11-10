@@ -1,0 +1,236 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyOlsEjSP3+30yogZg3aTu9z",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/Bilal-data/california-housing-analysis/blob/main/california_housing_analysis.ipynb%20\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "o9S4w-BaGimm",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "cb34fb77-def3-41de-9c6d-052e57ae25dc"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "مقارنة نموذج غبي مع نموذجنا\n",
+            "النموذج الغبي: 76745.1436396704\n",
+            "نموذجنا: 55906.35237767937\n"
+          ]
+        }
+      ],
+      "source": [
+        "print (\"مقارنة نموذج غبي مع نموذجنا\")\n",
+        "import pandas as pd\n",
+        "from sklearn.model_selection import train_test_split\n",
+        "from sklearn.linear_model import LinearRegression\n",
+        "from sklearn.dummy import DummyRegressor\n",
+        "from sklearn.metrics import mean_absolute_error\n",
+        "\n",
+        "housing = pd.read_csv(\"/content/sample_data/california_housing_train.csv\")\n",
+        "clean = housing[housing[\"median_house_value\"] < 500000]\n",
+        "\n",
+        "X = clean[[\"median_income\"]]\n",
+        "y = clean[\"median_house_value\"]\n",
+        "\n",
+        "X_train, X_test, y_train, y_test = train_test_split(\n",
+        "    X, y, test_size=0.2, random_state=42\n",
+        ")\n",
+        "\n",
+        "dummy = DummyRegressor(strategy=\"mean\")\n",
+        "dummy.fit(X_train, y_train)\n",
+        "print(\"النموذج الغبي:\", mean_absolute_error(y_test, dummy.predict(X_test)))\n",
+        "\n",
+        "model = LinearRegression()\n",
+        "model.fit(X_train, y_train)\n",
+        "print(\"نموذجنا:\", mean_absolute_error(y_test, model.predict(X_test)))"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "features = [\n",
+        "      \"median_income\", \"housing_median_age\", \"total_rooms\",\n",
+        "          \"total_bedrooms\", \"population\", \"households\",\n",
+        "              \"latitude\", \"longitude\",\n",
+        "              ]\n",
+        "\n",
+        "X2 = clean[features]\n",
+        "\n",
+        "X2_train, X2_test, y_train2, y_test2 = train_test_split(\n",
+        "    X2, y, test_size=0.2, random_state=42\n",
+        ")\n",
+        "\n",
+        "model2 = LinearRegression()\n",
+        "model2.fit(X2_train, y_train2)\n",
+        "\n",
+        "print(mean_absolute_error(y_test2, model2.predict(X2_test)))\n"
+      ],
+      "metadata": {
+        "id": "3fuxznaYI6z7",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "fe6f6805-76a9-4fac-f56d-dd2375363dcd"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "45355.364897712505\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from sklearn.ensemble import RandomForestRegressor\n",
+        "\n",
+        "rf = RandomForestRegressor(n_estimators=100, random_state=42, n_jobs=-1)\n",
+        "rf.fit(X2_train, y_train2)\n",
+        "\n",
+        "print(mean_absolute_error(y_test2, rf.predict(X2_test)))"
+      ],
+      "metadata": {
+        "id": "XDu4uZkpKojM",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "35be9533-41b3-410c-8863-8aa95e343868"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "29703.85929167955\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "imp = pd.Series(rf.feature_importances_, index=features)\n",
+        "print(imp.sort_values(ascending=False))"
+      ],
+      "metadata": {
+        "id": "O_lS6X6qLrd4",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "88e80846-8134-47dd-9d71-1447df588ca0"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "median_income         0.463116\n",
+            "longitude             0.198047\n",
+            "latitude              0.173420\n",
+            "housing_median_age    0.057642\n",
+            "population            0.034443\n",
+            "total_rooms           0.028572\n",
+            "total_bedrooms        0.023780\n",
+            "households            0.020981\n",
+            "dtype: float64\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "for seed in [0, 1, 2]:\n",
+        "    a_tr, a_te, b_tr, b_te = train_test_split(X2, y, test_size=0.2, random_state=seed)\n",
+        "    m = RandomForestRegressor(n_estimators=100, random_state=42, n_jobs=-1)\n",
+        "    m.fit(a_tr, b_tr)\n",
+        "    print(seed, mean_absolute_error(b_te, m.predict(a_te)))"
+      ],
+      "metadata": {
+        "id": "kVCr8tObXGCc",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "f1d2a08d-4e49-4a48-b4a3-b13900655cdc"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "0 29240.734812867307\n",
+            "1 30638.1758397773\n",
+            "2 29675.67215589236\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import numpy as np\n",
+        "from sklearn.metrics import mean_squared_error\n",
+        "\n",
+        "lin_pred = model2.predict(X2_test)\n",
+        "rf_pred = rf.predict(X2_test)\n",
+        "\n",
+        "print(\"Linear 8 features RMSE:\", np.sqrt(mean_squared_error(y_test2, lin_pred)))\n",
+        "print(\"Random Forest RMSE:\", np.sqrt(mean_squared_error(y_test2, rf_pred)))"
+      ],
+      "metadata": {
+        "id": "gIhNokDjfqXo",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "b3a508f1-33ef-40e5-e6d3-02dcc1fb3db2"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Linear 8 features RMSE: 61007.092597157294\n",
+            "Random Forest RMSE: 44471.92816577853\n"
+          ]
+        }
+      ]
+    }
+  ]
+}
