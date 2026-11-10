@@ -56,14 +56,7 @@ The correlation dropped, but this does not mean the true relationship is weaker.
 ## Tools
 Python, pandas, matplotlib, scikit-learn, Google Colab.
 
----
-
-## ملخص بالعربي
-- الداتا فيها 17,000 صف و9 أعمدة، والسعر الوسيط للمنطقة هو الهدف.
-- المتوسط أكبر من الوسيط بحوالي 27 ألف، لأن البيوت الغالية بتشد المتوسط.
-- اكتشفت **سقف مصطنع** عند 500,001 في 836 صف (4.9 في المئة).
-- الدخل هو أقوى عامل: ارتباطه حوالي 0.69، ونزل لحوالي 0.65 بعد شيل الصفوف المسقوفة.
-- بنينا نماذج تنبؤ: أفضلها `Random Forest` بمتوسط غلط حوالي 29,704 دولار (أحسن من النموذج الغبي بحوالي 61 بالمئة).    
+---    
 
 ## Model Comparison
 
@@ -94,3 +87,12 @@ Location (latitude + longitude) accounts for about 37 percent, which explains wh
 - The main results use one train/test split (random_state=42). Re-running the Random Forest on three other random splits gave MAE between about 29,200 and 30,600 USD, so the result is stable.
 - Feature importance shows what the model relied on, not what causes prices to change. The room, bedroom and household counts are correlated with each other, so their importance is shared between them.
 - An error of about 16 percent of the average price is still too large for real decisions.
+
+---
+
+## ملخص بالعربي
+- الداتا فيها 17,000 صف و9 أعمدة، والسعر الوسيط للمنطقة هو الهدف.
+- المتوسط أكبر من الوسيط بحوالي 27 ألف، لأن البيوت الغالية بتشد المتوسط.
+- اكتشفت **سقف مصطنع** عند 500,001 في 836 صف (4.9 في المئة).
+- الدخل هو أقوى عامل: ارتباطه حوالي 0.69، ونزل لحوالي 0.65 بعد شيل الصفوف المسقوفة.
+- بنينا نماذج تنبؤ: أفضلها `Random Forest` بمتوسط غلط حوالي 29,704 دولار (أحسن من النموذج الغبي بحوالي 61 بالمئة).
