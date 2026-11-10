@@ -91,6 +91,6 @@ Location (latitude + longitude) accounts for about 37 percent, which explains wh
 ### Limitations
 
 - Rows at the artificial cap (500,001) were removed, so the model has not seen the most expensive houses and real-world error would be higher for them.
-- A single train/test split was used, so the numbers can shift slightly with a different split.
+- The main results use one train/test split (random_state=42). Re-running the Random Forest on three other random splits gave MAE between about 29,200 and 30,600 USD, so the result is stable.
 - Feature importance shows what the model relied on, not what causes prices to change. The room, bedroom and household counts are correlated with each other, so their importance is shared between them.
 - An error of about 16 percent of the average price is still too large for real decisions.
